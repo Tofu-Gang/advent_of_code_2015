@@ -1,5 +1,5 @@
 from sys import exit
-from src.day_01.puzzle import puzzle_02
+from src.day_02.puzzle import puzzle_01 as puzzle
 
 """
 Santa was hoping for a white Christmas, but his weather machine's "snow" 
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     Runs specified puzzles.
     """
 
-    puzzle_02()
+    puzzle()
     exit(0)
 
 ################################################################################
