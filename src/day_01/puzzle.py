@@ -23,8 +23,8 @@ def puzzle_01() -> None:
     """
 
     floor = 0
-    with open("src/day_01/input.txt", "r") as input:
-        for literal in input.read():
+    with open("src/day_01/input.txt", "r") as f:
+        for literal in f.read():
             if literal == "(":
                 floor += 1
             elif literal == ")":
@@ -46,8 +46,8 @@ def puzzle_02() -> None:
     """
 
     floor = 0
-    with open("src/day_01/input.txt", "r") as input:
-        input_string = input.read()
+    with open("src/day_01/input.txt", "r") as f:
+        input_string = f.read()
         for i in range(len(input_string)):
             literal = input_string[i]
             if literal == "(":
