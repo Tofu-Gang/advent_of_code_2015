@@ -1,3 +1,5 @@
+from itertools import chain
+
 """
 --- Day 6: Probably a Fire Hazard ---
 Because your neighbors keep defeating you in the holiday house decorating
@@ -16,6 +18,8 @@ DIMENSIONS_DENOMINATOR = ","
 SIZE = 1000
 LIGHT_ON = True
 LIGHT_OFF = False
+# breaks if initialized like LIGHTS = [[LIGHT_OFF] * SIZE] * SIZE
+# probably shallow copies of rows
 LIGHTS = []
 for _ in range(SIZE):
     row = []
@@ -57,26 +61,26 @@ def puzzle_01() -> None:
 
             corner_from = rest.split(CORNERS_DENOMINATOR)[0]
             corner_to = rest.split(CORNERS_DENOMINATOR)[1]
-            corner_from_row = int(corner_from.split(DIMENSIONS_DENOMINATOR)[1])
-            corner_from_column = int(corner_from.split(DIMENSIONS_DENOMINATOR)[0])
-            corner_to_column = int(corner_to.split(DIMENSIONS_DENOMINATOR)[0])
-            corner_to_row = int(corner_to.split(DIMENSIONS_DENOMINATOR)[1])
+            x_from = int(corner_from.split(DIMENSIONS_DENOMINATOR)[0])
+            y_from = int(corner_from.split(DIMENSIONS_DENOMINATOR)[1])
+            x_to = int(corner_to.split(DIMENSIONS_DENOMINATOR)[0])
+            y_to = int(corner_to.split(DIMENSIONS_DENOMINATOR)[1])
 
-            for row_number in range(corner_from_row, corner_to_row + 1):
-                row = LIGHTS[row_number]
-                columns_range = corner_to_column - corner_from_column + 1
+            for y in range(y_from, y_to + 1):
+                row = LIGHTS[y]
+                x_range = x_to - x_from + 1
 
                 if instruction.startswith(TURN_ON):
-                    row[corner_from_column: corner_to_column + 1] \
-                        = [LIGHT_ON] * columns_range
+                    row[x_from: x_to + 1] = [LIGHT_ON] * x_range
                 elif instruction.startswith(TURN_OFF):
-                    row[corner_from_column: corner_to_column + 1] \
-                        = [LIGHT_OFF] * columns_range
+                    row[x_from: x_to + 1] = [LIGHT_OFF] * x_range
                 elif instruction.startswith(TOGGLE):
-                    for column_number in range(corner_from_column, corner_to_column + 1):
-                        row[column_number] = not row[column_number]
+                    row = row[:x_from] \
+                          + list([not row[x]
+                                  for x in range(x_from, x_to + 1)]) \
+                          + row[x_to + 1:]
 
-                LIGHTS[row_number] = row
+                LIGHTS[y] = row
 
         print(sum([LIGHTS[row].count(LIGHT_ON) for row in range(SIZE)]))
 
@@ -84,9 +88,68 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
-    :return: None
+    You just finish implementing your winning light pattern when you realize you
+    mistranslated Santa's message from Ancient Nordic Elvish.
+
+    The light grid you bought actually has individual brightness controls; each
+    light can have a brightness of zero or more. The lights all start at zero.
+
+    The phrase turn on actually means that you should increase the brightness of
+    those lights by 1.
+
+    The phrase turn off actually means that you should decrease the brightness
+    of those lights by 1, to a minimum of zero.
+
+    The phrase toggle actually means that you should increase the brightness of
+    those lights by 2.
+
+    What is the total brightness of all lights combined after following Santa's
+    instructions?
+
+    :return: None; Answer should be 14687245.
     """
 
-    pass
+    with open("src/day_06/input.txt", "r") as f:
+        instructions = f.readlines()
+
+        for instruction in instructions:
+            if instruction.startswith(TURN_ON):
+                rest = instruction.split(TURN_ON)[1]
+            elif instruction.startswith(TURN_OFF):
+                rest = instruction.split(TURN_OFF)[1]
+            elif instruction.startswith(TOGGLE):
+                rest = instruction.split(TOGGLE)[1]
+            else:
+                rest = None
+
+            corner_from = rest.split(CORNERS_DENOMINATOR)[0]
+            corner_to = rest.split(CORNERS_DENOMINATOR)[1]
+            x_from = int(corner_from.split(DIMENSIONS_DENOMINATOR)[0])
+            y_from = int(corner_from.split(DIMENSIONS_DENOMINATOR)[1])
+            x_to = int(corner_to.split(DIMENSIONS_DENOMINATOR)[0])
+            y_to = int(corner_to.split(DIMENSIONS_DENOMINATOR)[1])
+
+            for y in range(y_from, y_to + 1):
+                row = LIGHTS[y]
+
+                if instruction.startswith(TURN_ON):
+                    row = row[:x_from] \
+                          + list([row[x] + 1
+                                  for x in range(x_from, x_to + 1)]) \
+                          + row[x_to + 1:]
+                elif instruction.startswith(TURN_OFF):
+                    row = row[:x_from] \
+                          + list([max(row[x] - 1, 0)
+                                  for x in range(x_from, x_to + 1)]) \
+                          + row[x_to + 1:]
+                elif instruction.startswith(TOGGLE):
+                    row = row[:x_from] \
+                          + list([row[x] + 2
+                                  for x in range(x_from, x_to + 1)]) \
+                          + row[x_to + 1:]
+
+                LIGHTS[y] = row
+
+        print(sum(list(chain.from_iterable(LIGHTS))))
 
 ################################################################################
