@@ -48,9 +48,11 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
-    :return: None
+    Now find one that starts with six zeroes.
+
+    :return: None; Answer should be 9962624.
     """
 
-    pass
+    print(_find_the_hash("000000"))
 
 ################################################################################
