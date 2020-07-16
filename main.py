@@ -1,5 +1,5 @@
 from sys import exit
-from src.day_03.puzzle import puzzle_01 as puzzle
+from src.day_03.puzzle import puzzle_02 as puzzle
 
 """
 Santa was hoping for a white Christmas, but his weather machine's "snow" 
