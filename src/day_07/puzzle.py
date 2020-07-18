@@ -1,7 +1,5 @@
 from typing import Dict
-
 from numpy import array
-from re import compile
 
 """
 --- Day 7: Some Assembly Required ---
@@ -29,6 +27,7 @@ BITWISE_NOT = "~"
 BINARY_OPERATORS = (AND, OR, LSHIFT, RSHIFT)
 BINARY_BITWISE_OPERATORS = (BITWISE_AND, BITWISE_OR, BITWISE_LSHIFT, BITWISE_RSHIFT)
 GOAL_WIRE = "a"
+OVERRIDDEN_WIRE = "b"
 
 ################################################################################
 
@@ -106,6 +105,38 @@ def _get_16_bit_number(input_number: int) -> int:
 
 ################################################################################
 
+def _get_goal_wire_signal_value(wires: Dict[str, str]) -> int:
+    """
+    Get the signal value of the goal wire.
+
+    :param wires: wires dictionary
+    :return: signal value of the goal wire
+    """
+
+    while True:
+        for key1 in wires:
+            # look for wires that can be evaluated directly to an integer value
+            try:
+                int(eval(wires[key1]))
+                # search for all usages of this wire
+                for key2 in wires:
+                    if "\""+key1+"\"" in str(wires[key2]):
+                        # and replace it with its integer value
+                        wire_in_expression = "wires[\""+key1+"\"]"
+                        value_to_replace = str(_get_16_bit_number(int(eval(wires[key1]))))
+                        wires[key2] = wires[key2].replace(wire_in_expression, value_to_replace)
+            except (TypeError, ValueError):
+                # this wire cannot be evaluated directly to an integer value, yet
+                pass
+        try:
+            # let's see if the signal value in the goal wire can be evaluated
+            return _get_16_bit_number(int(eval(wires[GOAL_WIRE])))
+        except ValueError:
+            # hmm, not yet
+            pass
+
+################################################################################
+
 def puzzle_01() -> None:
     """
     Each wire has an identifier (some lowercase letters) and can carry a 16-bit
@@ -130,37 +161,28 @@ def puzzle_01() -> None:
     """
 
     wires = _load_instructions()
-
-    while True:
-        for key1 in wires:
-            # look for wires that can be evaluated directly to an integer value
-            try:
-                int(eval(wires[key1]))
-                # search for all usages of this wire
-                for key2 in wires:
-                    if "\""+key1+"\"" in str(wires[key2]):
-                        # and replace it with its integer value
-                        wire_in_expression = "wires[\""+key1+"\"]"
-                        value_to_replace = str(_get_16_bit_number(int(eval(wires[key1]))))
-                        wires[key2] = wires[key2].replace(wire_in_expression, value_to_replace)
-            except (TypeError, ValueError):
-                # this wire cannot be evaluated directly to an integer value, yet
-                pass
-        try:
-            # let's see if the signal value in the goal wire can be evaluated
-            print(_get_16_bit_number(int(eval(wires[GOAL_WIRE]))))
-            break
-        except ValueError:
-            # hmm, not yet
-            pass
+    print(_get_goal_wire_signal_value(wires))
 
 ################################################################################
 
 def puzzle_02() -> None:
     """
-    :return: None
+    Now, take the signal you got on wire a, override wire b to that signal, and
+    reset the other wires (including wire a). What new signal is ultimately
+    provided to wire a?
+
+    :return: None; Answer should be 40149.
     """
 
-    pass
+    # get the puzzle 1 solution again
+    wires = _load_instructions()
+    # save the signal value
+    override_signal_value = str(_get_goal_wire_signal_value(wires))
+    # reset all wires
+    wires = _load_instructions()
+    # override the wire "b" with the given signal value
+    wires[OVERRIDDEN_WIRE] = override_signal_value
+    # finally get the puzzle 2 solution
+    print(_get_goal_wire_signal_value(wires))
 
 ################################################################################
