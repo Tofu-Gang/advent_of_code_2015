@@ -38,9 +38,21 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
-    :return: None
+    Now, let's go the other way. In addition to finding the number of characters
+    of code, you should now encode each code representation as a new string and
+    find the number of characters of the new encoded representation, including
+    the surrounding double quotes.
+
+    Your task is to find the total number of characters to represent the newly
+    encoded strings minus the number of characters of code in each original
+    string literal.
+
+    :return: None; Answer should be 2085.
     """
 
-    pass
+    with open("src/day_08/input.txt", "r") as f:
+        lines = f.readlines()
+        print(sum([2 + line.strip().count('\\') + line.strip().count('"')
+                   for line in lines]))
 
 ################################################################################
