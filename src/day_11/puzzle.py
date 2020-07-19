@@ -92,9 +92,20 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
-    :return: None
+    Santa's password expired again. What's the next one?
+
+    :return: None; Answer should be vzcaabcc.
     """
 
-    pass
+    with open("src/day_11/input.txt", "r") as f:
+        password = f.read()
+
+        while not _is_password_valid(password):
+            password = _increment_password(password)
+        password = _increment_password(password)
+        while not _is_password_valid(password):
+            password = _increment_password(password)
+
+        print(password)
 
 ################################################################################
