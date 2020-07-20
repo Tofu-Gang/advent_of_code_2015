@@ -14,6 +14,7 @@ WOULD_DENOMINATOR = "would"
 GAIN = "gain"
 LOSE = "lose"
 HAPPINESS_DENOMINATOR = "happiness units by sitting next to"
+MYSELF = "myself"
 
 ################################################################################
 
@@ -31,6 +32,7 @@ def _get_happiness_info() -> Dict[str, Dict[str, int]]:
         lines = f.readlines()
         for line in lines:
             person = line.split(WOULD_DENOMINATOR)[0].strip()
+            # that [:-1] at the end means to omit the dot at the end
             neighbour = line.split(HAPPINESS_DENOMINATOR)[1].strip()[:-1]
             regex = compile(r'\d+')
 
@@ -90,9 +92,25 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
-    :return: None
+    In all the commotion, you realize that you forgot to seat yourself. At this
+    point, you're pretty apathetic toward the whole thing, and your happiness
+    wouldn't really go up or down regardless of who you sit next to. You assume
+    everyone else would be just as ambivalent about sitting next to you, too.
+
+    So, add yourself to the list, and give all happiness relationships that
+    involve you a score of 0.
+
+    What is the total change in happiness for the optimal seating arrangement
+    that actually includes yourself?
+
+    :return: None; Answer should be 668.
     """
 
-    pass
+    happiness_info = _get_happiness_info()
+    [happiness_info[person].update({MYSELF: 0}) for person in happiness_info]
+    happiness_info.update({MYSELF: {}})
+    [happiness_info[MYSELF].update({person: 0}) for person in happiness_info]
+    print(max([_get_seating_happiness(perm, happiness_info)
+               for perm in permutations(happiness_info.keys())]))
 
 ################################################################################
