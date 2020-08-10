@@ -67,23 +67,20 @@ def puzzle_02() -> None:
     Again given the descriptions of each reindeer (in the puzzle input), after
     exactly 2503 seconds, how many points does the winning reindeer have?
 
-    :return: None; Wrong answers: 1151, 2585-too high
+    :return: None; Answer should be 1102.
     """
 
-    # reindeer = _load_reindeer_stats()
-    # for a_reindeer in reindeer:
-    #     a_reindeer.start()
-    #
-    # for _ in range(RACE_DURATION):
-    #     for a_reindeer in reindeer:
-    #         a_reindeer.advance()
-    #     max_distance = max([a_reindeer.distance for a_reindeer in reindeer])
-    #     for a_reindeer in reindeer:
-    #         if a_reindeer.distance == max_distance:
-    #             a_reindeer.award_point()
-    #
-    # max_points = max([a_reindeer.points for a_reindeer in reindeer])
-    # print([a_reindeer.distance for a_reindeer in reindeer if a_reindeer.points == max_points][0])
-    pass
+    reindeer = _load_reindeer_stats()
+    [a_reindeer.start() for a_reindeer in reindeer]
+
+    for _ in range(RACE_DURATION):
+        for a_reindeer in reindeer:
+            a_reindeer.advance()
+
+        max_distance = max([a_reindeer.distance for a_reindeer in reindeer])
+        [a_reindeer.award_point() for a_reindeer in reindeer
+         if a_reindeer.distance == max_distance]
+
+    print(max([a_reindeer.points for a_reindeer in reindeer]))
 
 ################################################################################

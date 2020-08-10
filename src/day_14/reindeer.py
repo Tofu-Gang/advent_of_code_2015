@@ -1,16 +1,21 @@
 class Reindeer(object):
     """
-
+    Reindeer class representation with all things needed for Reindeer Olympics.
     """
 
 ################################################################################
 
     def __init__(self, name, speed, fly_time, rest_time) -> None:
         """
+        Reindeer has its name, speed, fly time and rest time. It can provide
+        information about itself and functions are provided for starting the
+        race, advancing the race for one second and awarding points.
 
-        :param speed:
-        :param fly_time:
-        :param rest_time:
+        :param name: name of the reindeer
+        :param speed: reindeer speed (km/s)
+        :param fly_time: time for which reindeer can fly until it is exhausted
+        (s)
+        :param rest_time: time for which an exhausted reindeer has to rest (s)
         """
 
         self._NAME = name
@@ -25,10 +30,9 @@ class Reindeer(object):
 ################################################################################
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
-
-        :return:
+        :return: reindeer name
         """
 
         return self._NAME
@@ -36,10 +40,9 @@ class Reindeer(object):
 ################################################################################
 
     @property
-    def distance(self):
+    def distance(self) -> int:
         """
-
-        :return:
+        :return: reindeer distance in any point of the race
         """
 
         return self._distance
@@ -47,10 +50,10 @@ class Reindeer(object):
 ################################################################################
 
     @property
-    def is_flying(self):
+    def is_flying(self) -> bool:
         """
-
-        :return:
+        :return: True if the reindeer is currently flying, False otherwise
+        (resting)
         """
 
         return self._fly_remaining_time is not None
@@ -58,10 +61,10 @@ class Reindeer(object):
 ################################################################################
 
     @property
-    def is_resting(self):
+    def is_resting(self) -> bool:
         """
-
-        :return:
+        :return: True if the reindeer is exhausted and resting, False otherwise
+        (flying)
         """
 
         return self._rest_remaining_time is not None
@@ -69,20 +72,20 @@ class Reindeer(object):
 ################################################################################
 
     @property
-    def points(self):
+    def points(self) -> int:
         """
-
-        :return:
+        :return: points awarded to the reindeer in any point of the race
         """
 
         return self._points
 
 ################################################################################
 
-    def start(self):
+    def start(self) -> None:
         """
+        Initializes everything needed for the start of the race.
 
-        :return:
+        :return: None
         """
 
         self._distance = 0
@@ -91,10 +94,11 @@ class Reindeer(object):
 
 ################################################################################
 
-    def advance(self):
+    def advance(self) -> None:
         """
+        Advances the reindeer for one second in the race.
 
-        :return:
+        :return: None
         """
 
         if self.is_flying:
@@ -114,10 +118,11 @@ class Reindeer(object):
 
 ################################################################################
 
-    def award_point(self):
+    def award_point(self) -> None:
         """
+        Awards a point to the reindeer.
 
-        :return:
+        :return: None
         """
 
         self._points += 1
