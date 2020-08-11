@@ -10,6 +10,7 @@ All you have to do is find the right balance of ingredients.
 """
 
 TEASPOONS_SUM = 100
+CALORIES = 500
 
 ################################################################################
 
@@ -43,6 +44,21 @@ def _recipe_score(ingredients: Tuple[Ingredient],
     texture_score = max(sum(ingredients[i].texture * teaspoons[i]
                             for i in range(len(ingredients))), 0)
     return capacity_score * durability_score * flavor_score * texture_score
+
+################################################################################
+
+def _is_recipe_500_calories(ingredients: Tuple[Ingredient],
+                            teaspoons: Tuple[int, int, int, int]) -> bool:
+    """
+    Decides if the recipe is exactly 500 calories.
+
+    :param ingredients: tuple of all ingredients
+    :param teaspoons: tuple of teaspoon amounts of all ingredients
+    :return: True if the recipe is exactly 500 calories, False otherwise
+    """
+
+    return sum([teaspoons[i] * ingredients[i].calories
+                for i in range(len(ingredients))]) == CALORIES
 
 ################################################################################
 
@@ -87,10 +103,30 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
+    Your cookie recipe becomes wildly popular! Someone asks if you can make
+    another recipe that has exactly 500 calories per cookie (so they can use it
+    as a meal replacement). Keep the rest of your award-winning process the same
+    (100 teaspoons, same ingredients, same scoring system).
 
-    :return: None
+    Given the ingredients in your kitchen and their properties, what is the
+    total score of the highest-scoring cookie you can make with a calorie total
+    of 500?
+
+    :return: None; Answer should be 117936.
     """
 
-    pass
+    ingredients = _load_ingredients_stats()
+    max_score = -maxsize - 1
+
+    for i in range(TEASPOONS_SUM):
+        for j in range(TEASPOONS_SUM - i):
+            for k in range(TEASPOONS_SUM - sum((i, j))):
+                l = TEASPOONS_SUM - sum((i, j, k))
+                teaspoons = (i, j, k, l)
+                if _is_recipe_500_calories(ingredients, teaspoons):
+                    max_score = max(_recipe_score(ingredients, teaspoons),
+                                    max_score)
+
+    print(max_score)
 
 ################################################################################
