@@ -35,6 +35,8 @@ MFCSAM_OUTPUT = {
 COLON = ":"
 COMMA = ","
 SUE = "Sue"
+GREATER = ("cats", "trees")
+FEWER = ("pomeranians", "goldfish")
 
 ################################################################################
 
@@ -110,9 +112,48 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
-    :return: None
+    As you're about to send the thank you note, something in the MFCSAM's
+    instructions catches your eye. Apparently, it has an outdated
+    retroencabulator, and so the output from the machine isn't exact values -
+    some of them indicate ranges.
+
+    In particular, the cats and trees readings indicates that there are greater
+    than that many (due to the unpredictable nuclear decay of cat dander and
+    tree pollen), while the pomeranians and goldfish readings indicate that
+    there are fewer than that many (due to the modial interaction of
+    magnetoreluctance).
+
+    What is the number of the real Aunt Sue?
+
+    :return: None; Answer should be 241.
     """
 
-    pass
+    with open("src/day_16/input.txt", "r") as f:
+        lines = f.readlines()
+        max_hits = -maxsize - 1
+        sue_number = None
+
+        for line in lines:
+            hits = 0
+            for compound in COMPOUNDS:
+                if compound in line:
+                    amount = int(line.strip()
+                                 .split(compound)[1]
+                                 .split(COLON)[1]
+                                 .split(COMMA)[0])
+                    if compound in GREATER:
+                        if amount > MFCSAM_OUTPUT[compound]:
+                            hits += 1
+                    elif compound in FEWER:
+                        if amount < MFCSAM_OUTPUT[compound]:
+                            hits += 1
+                    else:
+                        if amount == MFCSAM_OUTPUT[compound]:
+                            hits += 1
+            if hits > max_hits:
+                max_hits = hits
+                sue_number = line.strip().split(SUE)[1].split(COLON)[0].strip()
+
+        print(sue_number)
 
 ################################################################################
