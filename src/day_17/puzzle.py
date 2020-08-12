@@ -31,9 +31,27 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
-    :return: None
+    While playing with all the containers in the kitchen, another load of eggnog
+    arrives! The shipping and receiving department is requesting as many
+    containers as you can spare.
+
+    Find the minimum number of containers that can exactly fit all 150 liters of
+    eggnog. How many different ways can you fill that number of containers and
+    still hold exactly 150 litres?
+
+    :return: None; Answer should be 18.
     """
 
-    pass
+    with open("src/day_17/input.txt", "r") as f:
+        containers = tuple([int(line.strip()) for line in f.readlines()])
+
+        for i in range(len(containers)):
+            containers_combinations = \
+                [combination
+                 for combination in combinations(containers, i)
+                 if sum(combination) == EGGNOG_LITRES]
+            if len(containers_combinations) > 0:
+                print(len(containers_combinations))
+                break
 
 ################################################################################
