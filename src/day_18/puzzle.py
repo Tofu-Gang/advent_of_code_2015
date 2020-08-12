@@ -103,6 +103,24 @@ def _advance_grid(old_grid: List[List[bool]]) -> List[List[bool]]:
 
 ################################################################################
 
+def _lights_stuck(grid: List[List[bool]]) -> List[List[bool]]:
+    """
+    Four lights, one in each corner of the grid is stuck and cannot be turned
+    off.
+
+    :param grid: grid of lights
+    :return: grid of lights with the four stuck lights turned on
+    """
+
+    grid[0][0] = True
+    grid[0][len(grid) - 1] = True
+    grid[len(grid) - 1][0] = True
+    grid[len(grid) - 1][len(grid) - 1] = True
+
+    return grid
+
+################################################################################
+
 def _lit_lights(grid: List[List[bool]]) -> int:
     """
     Counts the number of lights in the grid which are turned on.
@@ -145,9 +163,25 @@ def puzzle_01() -> None:
 
 def puzzle_02() -> None:
     """
-    :return: None
+    You flip the instructions over; Santa goes on to point out that this is all
+    just an implementation of Conway's Game of Life. At least, it was, until you
+    notice that something's wrong with the grid of lights you bought: four
+    lights, one in each corner, are stuck on and can't be turned off.
+
+    In your grid of 100x100 lights, given your initial configuration, but with
+    the four corners always in the on state, how many lights are on after 100
+    steps?
+
+    :return: None; Answer should be 924.
     """
 
-    pass
+    with open("src/day_18/input.txt", "r") as f:
+        lines = [line.strip() for line in f.readlines()]
+        grid = _lights_stuck(_load_grid(lines))
+
+        for _ in range(STEPS):
+            grid = _lights_stuck(_advance_grid(grid))
+
+        print(_lit_lights(grid))
 
 ################################################################################
