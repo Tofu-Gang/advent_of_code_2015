@@ -11,6 +11,8 @@ on each day in the Advent calendar; the second puzzle is unlocked when you
 complete the first. Each puzzle grants one star. Good luck!
 """
 
+from src.day_01 import puzzle
+
 ################################################################################
 
 if __name__ == "__main__":
@@ -18,6 +20,7 @@ if __name__ == "__main__":
     Runs specified puzzles.
     """
 
-    print("Advent of Code 2015")
+    puzzle.puzzle_01()
+    puzzle.puzzle_02()
 
 ################################################################################
