@@ -11,7 +11,7 @@ on each day in the Advent calendar; the second puzzle is unlocked when you
 complete the first. Each puzzle grants one star. Good luck!
 """
 
-from src.day_13 import puzzle
+from src.day_14 import puzzle
 
 ################################################################################
 
